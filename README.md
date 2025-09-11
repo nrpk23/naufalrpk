@@ -1,2 +1,0 @@
-# naufalrpk
-Naufal Ramadhan

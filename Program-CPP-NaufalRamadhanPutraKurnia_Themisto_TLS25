@@ -1,0 +1,213 @@
+Naufal Ramadhan Putra Kurnia
+Themisto
+
+Soal 1
+
+#include <iostream>
+using namespace std;
+
+// Fungsi untuk membalik bilangan secara matematis
+int reverseNumber(int x) {
+    int sign = (x < 0) ? -1 : 1;
+    x = (x < 0) ? -x : x;  // ambil nilai absolut
+    
+    int rev = 0;
+    while (x > 0) {
+        rev = rev * 10 + (x % 10);
+        x /= 10;
+    }
+    
+    return sign * rev; // kembalikan dengan tanda aslinya
+}
+
+int main() {
+    int n;
+    cin >> n; // panjang array
+    
+    int arr[n];
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i]; // input elemen array
+    }
+    
+    long long sum = 0; // gunakan long long biar aman dari overflow
+    for (int i = 0; i < n; i++) {
+        if (i % 2 == 0) { // indeks genap
+            arr[i] = reverseNumber(arr[i]);
+        }
+        // indeks ganjil tetap
+        sum += arr[i];
+    }
+    
+    // Output jumlah
+    cout << sum << endl;
+    
+    return 0;
+}
+
+
+
+
+Soal 2
+
+#include <iostream>
+#include <string>
+#include <cctype>
+using namespace std;
+
+// Cek vokal (besar/kecil)
+bool isVowel(char c) {
+    c = tolower(static_cast<unsigned char>(c));
+    return (c=='a' || c=='e' || c=='i' || c=='o' || c=='u');
+}
+
+// Fungsi reverse user-defined (tidak boleh pakai std::reverse)
+string myReverse(const string &s) {
+    string t = s;
+    int i = 0, j = (int)t.size() - 1;
+    while (i < j) {
+        char tmp = t[i];
+        t[i] = t[j];
+        t[j] = tmp;
+        ++i; --j;
+    }
+    return t;
+}
+
+// Buat password dari kata asli
+string makePassword(const string &word) {
+    if (word.empty()) return "";
+
+    // 1) ambil huruf non-vokal (konsonan) dalam urutan asli
+    string consonants;
+    for (char c : word) {
+        if (!isVowel(c)) consonants.push_back(c);
+    }
+
+    // 2) balikkan semua huruf (menggunakan fungsi user-defined)
+    string rev = myReverse(consonants);
+
+    // 3) ambil kode ASCII huruf pertama kata asli sebagai integer
+    int asciiVal = static_cast<unsigned char>(word[0]);
+
+    // 4) masukkan ascii (sebagai desimal string) di tengah rev
+    string asciiStr = to_string(asciiVal);
+    int mid = (int)rev.size() / 2; // floor(len/2)
+    string password = rev.substr(0, mid) + asciiStr + rev.substr(mid);
+
+    return password;
+}
+
+// Dari password -> dapatkan sebagian kata asli (konsonan + huruf pertama bila hilang)
+string reconstructPartial(const string &password) {
+    if (password.empty()) return "";
+
+    // 1) temukan substring angka (kode ASCII) — asumsi: satu blok digit kontigu berada di tengah
+    int n = (int)password.size();
+    int startDigit = -1, endDigit = -1; // [startDigit, endDigit)
+    for (int i = 0; i < n; ++i) {
+        if (isdigit(static_cast<unsigned char>(password[i]))) {
+            if (startDigit == -1) startDigit = i;
+            endDigit = i + 1;
+        }
+    }
+
+    if (startDigit == -1) {
+        // Tidak ada angka -> tidak sesuai format
+        return ""; 
+    }
+
+    // 2) ekstrak angka -> jadi integer ascii
+    string digitPart = password.substr(startDigit, endDigit - startDigit);
+    int asciiVal = stoi(digitPart);
+    char firstChar = static_cast<char>(asciiVal);
+
+    // 3) sisa string = password tanpa bagian angka -> ini adalah versi 'rev' (rev = reversed consonants)
+    string rev = password.substr(0, startDigit) + password.substr(endDigit);
+
+    // 4) balikkan rev menggunakan myReverse untuk mendapatkan urutan konsonan asli
+    string consonantsOrig = myReverse(rev);
+
+    // 5) jika huruf dari ascii belum ada di depan (mis. huruf pertama asli vokal dan dihapus),
+    //    maka tambahkan di depan. Jika sudah sama, jangan duplikasi.
+    if (consonantsOrig.empty() || consonantsOrig[0] != firstChar) {
+        consonantsOrig = string(1, firstChar) + consonantsOrig;
+    }
+
+    // Hasil: sebagian kata asli (konsonan + huruf pertama jika hilang)
+    return consonantsOrig;
+}
+
+int main() {
+    // Contoh dari soal
+    string a1 = "banana";
+    string a2 = "Jakarta";
+    string a3 = "TANGERANG";
+
+    cout << "=== Generate password ===\n";
+    cout << a1 << " -> " << makePassword(a1) << "\n";
+    cout << a2 << " -> " << makePassword(a2) << "\n";
+    cout << a3 << " -> " << makePassword(a3) << "\n\n";
+
+    cout << "=== Reconstruct partial original from password ===\n";
+    cout << "nn98b  -> " << reconstructPartial("nn98b") << "  (expect: bnn)\n";
+    cout << "tr74kJ -> " << reconstructPartial("tr74kJ") << "  (expect: Jkrt)\n";
+    cout << "GNR84GNT -> " << reconstructPartial("GNR84GNT") << " (expect: T G N G R N G? actually: T G N G R N G without vowels -> check below)\n";
+
+    // Contoh interaktif (opsional)
+    string input;
+    cout << "\nMasukkan kata untuk generate password (atau enter untuk skip): ";
+    getline(cin, input);
+    if (!input.empty()) {
+        cout << "Password: " << makePassword(input) << "\n";
+    }
+
+    cout << "\nMasukkan sandi untuk reconstruct (atau enter untuk keluar): ";
+    getline(cin, input);
+    if (!input.empty()) {
+        cout << "Partial original: " << reconstructPartial(input) << "\n";
+    }
+
+    return 0;
+}
+
+
+
+Soal 3
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Output warna pada detik t (t >= 0)
+// Siklus standar: [0..19] = Hijau (20s), [20..22] = Kuning (3s), [23..102] = Merah (80s)
+// Kita tahu: pada detik 45 lampu = Kuning.
+// Maka shift = (20 - 45) mod 103 = 78, agar 45+shift => 20 (awal kuning).
+string traffic_light_color(long long t) {
+    const int green = 20;
+    const int yellow = 3;
+    const int red = 80;
+    const int cycle = green + yellow + red; // 103
+
+    const int shift = (green - 45) % cycle; // mungkin negatif
+    int s = (shift < 0) ? shift + cycle : shift; // buat positive
+    int pos = (int)(( (t % cycle) + s ) % cycle); // posisi dalam siklus setelah digeser
+
+    if (pos < green) return "Hijau";
+    else if (pos < green + yellow) return "Kuning";
+    else return "Merah";
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    cout << "Masukkan detik t (>=0). Program keluar jika input bukan integer.\n";
+    long long t;
+    while (cin >> t) {
+        if (t < 0) {
+            cout << "Masukkan detik non-negatif.\n";
+            continue;
+        }
+        cout << "Detik " << t << " : " << traffic_light_color(t) << "\n";
+    }
+    return 0;
+}
