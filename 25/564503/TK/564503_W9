@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// value of pi
+const double PI = 3.1416;
+
+// compute distance between two points [squre root of ((x2-x1)^2 + (y2-y1)^2)]
+double distance(double x1, double y1, double x2, double y2) {
+    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+}
+
+// compute radius (uses distance function)
+double radius(double x1, double y1, double x2, double y2) {
+    return distance(x1, y1, x2, y2);
+}
+
+// compute circumference [2*pi*r]
+double circumference(double r) {
+    return 2 * PI * r;
+}
+
+// compute area [2*pi*r^2]
+double area(double r) {
+    return PI * r * r;
+}
+
+// data input
+int main() {
+    double x1, y1, x2, y2;
+
+    cout << "Enter the center of the circle (x1 y1): ";
+    cin >> x1 >> y1;
+
+    cout << "Enter a point on the circle (x2 y2): ";
+    cin >> x2 >> y2;
+
+    double r = radius(x1, y1, x2, y2);
+
+    cout << "\nRadius: " << r << endl;
+    cout << "Diameter: " << 2 * r << endl;
+    cout << "Circumference: " << circumference(r) << endl;
+    cout << "Area: " << area(r) << endl;
+    return 0;
+}
