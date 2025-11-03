@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-// Struct untuk menyimpan data mahasiswa
+// struct data mahasiswa
 struct studentType {
     string studentFName;
     string studentLName;
@@ -11,7 +11,7 @@ struct studentType {
     char grade;
 };
 
-// Fungsi untuk membaca data mahasiswa
+// fungsi membaca data mahasiswa
 void readData(studentType students[], int size) {
     cout << "Masukkan nama depan, nama belakang, dan nilai ujian untuk tiap mahasiswa:\n";
     for (int i = 0; i < size; i++) {
@@ -20,7 +20,7 @@ void readData(studentType students[], int size) {
     }
 }
 
-// Fungsi untuk menetapkan nilai huruf (grade) berdasarkan nilai ujian
+// fungsi untuk menetapkan grade berdasarkan nilai ujian
 void assignGrade(studentType students[], int size) {
     for (int i = 0; i < size; i++) {
         int score = students[i].testScore;
@@ -37,7 +37,7 @@ void assignGrade(studentType students[], int size) {
     }
 }
 
-// Fungsi untuk mencari nilai ujian tertinggi
+// fungsi untuk mencari nilai ujian tertinggi
 int findHighestScore(studentType students[], int size) {
     int highest = students[0].testScore;
     for (int i = 1; i < size; i++) {
@@ -47,7 +47,7 @@ int findHighestScore(studentType students[], int size) {
     return highest;
 }
 
-// Fungsi untuk mencetak nama mahasiswa dengan nilai tertinggi
+// fungsi untuk mencetak nama mahasiswa dengan nilai tertinggi
 void printHighestScorers(studentType students[], int size, int highest) {
     cout << "\nMahasiswa dengan nilai tertinggi (" << highest << "):\n";
     for (int i = 0; i < size; i++) {
@@ -57,7 +57,7 @@ void printHighestScorers(studentType students[], int size, int highest) {
     }
 }
 
-// Fungsi untuk mencetak seluruh data mahasiswa
+// fungsi untuk mencetak seluruh data mahasiswa
 void printAll(studentType students[], int size) {
     cout << "\nDaftar Mahasiswa:\n";
     cout << left << setw(15) << "Nama Belakang"
@@ -79,7 +79,7 @@ int main() {
     const int NUM_STUDENTS = 5; // ubah ke 20 sesuai soal jika diperlukan
     studentType students[NUM_STUDENTS];
 
-    // Pemanggilan fungsi
+    // pemanggilan fungsi
     readData(students, NUM_STUDENTS);
     assignGrade(students, NUM_STUDENTS);
     int highest = findHighestScore(students, NUM_STUDENTS);
